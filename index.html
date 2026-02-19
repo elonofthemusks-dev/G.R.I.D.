@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<title>G.R.I.D. LOGIN</title>
+</head>
+<body>
+
+<div id="binary-bg"></div>
+
+<div class="login-container">
+  <div class="login-card">
+    <h2>G.R.I.D. LOGIN</h2>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Access Dashboard</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// ===== FIREBASE CONFIG =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDBdc7pzl_LbE4G-em_opKTUMLENK_OByw",
+  authDomain: "grid-b01a1.firebaseapp.com",
+  projectId: "grid-b01a1",
+  storageBucket: "grid-b01a1.firebasestorage.app",
+  messagingSenderId: "687489281097",
+  appId: "1:687489281097:web:e62af8f7899f240a7ae398",
+  measurementId: "G-SLJV5HJCLK"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ===== BUILT-IN TEST USERS (FOR DEMO) =====
+const testUsers = [
+  { email: "test@school.com", password: "demo123" },
+  { email: "student@school.com", password: "123456" }
+];
+
+// ===== LOGIN FUNCTION =====
+window.login = async function() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  // 🔹 Check if email exists in demo testUsers
+  const valid = testUsers.find(u => u.email === email && u.password === password);
+  if (!valid) {
+    alert("Access Denied 🚫 Invalid credentials");
+    return;
+  }
+
+  // 🔹 Firebase login (will pass if you added the same user in Firebase Auth)
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    window.location.href = "tracker.html"; // redirect after login
+  } catch (error) {
+    console.log("ERROR CODE:", error.code);
+    console.log("ERROR MESSAGE:", error.message);
+    alert("Firebase login failed 🚫 Check email/password in Firebase console");
+  }
+}
+
+// ===== BINARY BACKGROUND ANIMATION =====
+const binary = document.getElementById('binary-bg');
+function generateBinary() {
+  const rows = [];
+  for(let i=0;i<50;i++){
+    let line = '';
+    for(let j=0;j<120;j++){
+      line += Math.random() > 0.5 ? '1' : '0';
+    }
+    rows.push(line);
+  }
+  binary.textContent = rows.join('\n');
+}
+setInterval(generateBinary, 100);
+</script>
+
+</body>
+</html>
